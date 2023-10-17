@@ -28,7 +28,6 @@
 				<div class="lg-container">
 		<h1>Login</h1>
 		<form action="login.php" id="lg-form" name="lg-form" method="post">
-			
 			<div>
 				<label for="username">Username:</label>
 				<input type="text" name="user" placeholder="username"/>

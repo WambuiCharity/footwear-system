@@ -1,68 +1,56 @@
 <?php
-	//Start session
-	session_start();
-	
-	//Connect to mysql server
-	require "db.php";
-	
-	//Function to sanitize values received from the form. Prevents SQL injection
-	function clean($str) {
-		$str = @trim($str);
-		if(get_magic_quotes_gpc()) {
-			$str = stripslashes($str);
-		}
-		return mysql_real_escape_string($str);
-	}
-	
-	//Sanitize the POST values
-	$login = clean($_POST['user']);
-	$password = clean($_POST['password']);
-	
-	//Create query
+// Connect to MySQL server
+require "db.php";
 
-	$qry1="SELECT * FROM users WHERE username='$login' AND password='$password' AND Role='Administrator'";
-	$result1=mysql_query($qry1);
-	$r1 = $result1['Realname'];
-	//Check whether the query was successful or not
-	if($result1) {
-		if(mysql_num_rows($result1) > 0) {
-			//Login Successful
-			session_regenerate_id();
-			$member1 = mysql_fetch_assoc($result);
-			mysql_query("UPDATE currentuser SET Email='".$member1['Email']."', Realname='".$member1['Realname']."',Contact='".$member1['Contact']."',Address='".$member1['Address']."'");
-			session_write_close();
-			
-			header("location: admin.php");
-			
-			exit();
-		
-		}
-	}else {
-		die("Query failed");
-	}
-	
-	
-	$qry="SELECT * FROM users WHERE username='$login' AND password='$password'";
-	$result=mysql_query($qry);
-	$r = $result['Realname'];
-	//Check whether the query was successful or not
-	if($result) {
-		if(mysql_num_rows($result) > 0) {
-			//Login Successful
-			session_regenerate_id();
-			$member = mysql_fetch_assoc($result);
-			mysql_query("UPDATE currentuser SET Email='".$member['Email']."', Realname='".$member['Realname']."',Contact='".$member['Contact']."',Address='".$member['Address']."'");
-			session_write_close();
-			
-			header("location: productsuser.php");
-			
-			exit();
-		}else {
-			//Login failed
-			header("location: products.php");
-			exit();
-		}
-	}else {
-		die("Query failed");
-	}
+session_start(); // Start the session
+
+// Check if the form was submitted
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Connect to your MySQL database
+    $conn = new mysqli("sql8.freesqldatabase.com", "sql8654148", "KgPdFcec6B", "sql8654148");
+
+    // Check for database connection errors
+    if ($conn->connect_error) {
+        die("Database connection failed: " . $conn->connect_error);
+    }
+
+    // Function to sanitize input and prevent SQL injection
+    function clean($str, $conn) {
+        $str = trim($str);
+        return $conn->real_escape_string($str);
+    }
+
+    // Sanitize the POST values
+    $login = clean($_POST['user'], $conn);
+    $password = clean($_POST['password'], $conn);
+
+    // Create and execute the query
+    $qry = "SELECT * FROM users WHERE username='$login' AND password='$password'";
+    $result = $conn->query($qry);
+
+    if ($result) {
+        if ($result->num_rows > 0) {
+            // Login Successful
+            $member = $result->fetch_assoc();
+            $_SESSION['user_id'] = $member['id']; // You may store user ID in the session for later use
+            $conn->close();
+
+            header("location: productsuser.php");
+            exit();
+        } else {
+            // Login failed
+            $conn->close();
+            header("location: products.php");
+            exit();
+        }
+    } else {
+        // Query failed
+        $conn->close();
+        die("Query failed");
+    }
+} else {
+    // Redirect users to the login page if they access login.php directly without submitting the form.
+    header("location: login.html");
+    exit();
+}
 ?>

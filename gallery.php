@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>HOME DECOR</title>
+    <title>FOOTWEAR</title>
     <link href="themes/4/js-image-slider.css" rel="stylesheet" type="text/css" />
     <script src="themes/4/js-image-slider.js" type="text/javascript"></script>
     <link href="style.css" rel="stylesheet" type="text/css">
@@ -51,7 +51,7 @@
   <body>
   <div id="header">																																																																								
 		<div id="header_inside">
-			<marquee><P><H1>HOME DECORE SYSTEM</H1></P></marquee>																																									
+			<marquee><P><H1>FOOTWEAR SYSTEM</H1></P></marquee>																																									
 			<ul id="menu">
 				<li><a href="index.php" class="but1" style="text-decoration:none">Home</a></li>
 				<li><a href="#" target="_parent" class="but2_active" style="text-decoration:none">Gallery</a></li>
